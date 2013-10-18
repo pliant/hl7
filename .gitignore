@@ -1,0 +1,21 @@
+# Binaries
+*.jar
+*.class
+
+# Lein Files
+.lein-deps-sum
+.lein-failures
+.lein-plugins
+.lein-repl-history
+/bin
+/lib
+/target
+/classes
+/checkouts
+pom.xml
+pom.xml.asc
+
+# Eclipse Files
+.classpath
+.project
+.settings/
