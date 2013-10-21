@@ -21,6 +21,7 @@ Pulls the HL7 messages from a file off the file system. Uses the following sourc
 
 * path : The path to the file from the root of the file system.
 
+
 ### Router Source - 'uri'
 Pulls the HL7 messages from a URI location. Uses the following source options:
 
@@ -31,20 +32,25 @@ Pulls the HL7 messages from a URI location. Uses the following source options:
 Counts all of the messages from the source and prints it out to the console.  Good for debugging.  No Parameters are needed.
 
 
-
 ### Router Target - 'splitter'
 Writes the messages to batch files, partitioning to files based off of a partitioning function.  Uses the following source options:
 
 * directory : The path to the directory where the files are saved to.
 * prefix : A prefix to use when naming the output files.
 * suffix : A suffix to use when naming the output files.  This would include the extension.
+* append : If true, and the file already exists, the data will be appended to it.  Defaults to false.
 * partitioner : The name of the partitioner to use.  The partitioner provides a string that, along with the prefix and suffix, determine the name of the file to save the messages to.  The current partitioners are:
     + msg-hour : Returns a the date of the HL7 message in the format of YYYYMMDDhh.
+
 
 ### Examples
 
 ```
-    lein run -m pliant.hl7.task.router -so "uri=file:/hl7/ADT_201310.hl7" -to "partitioner=msg-hour&directory=/temp/work/hl7&prefix=ADT_&suffix=.hl7" -s uri -t splitter
+    # Using Lein
+    lein run -m pliant.hl7.task.router -so "uri=file:/hl7/ADT_201310.hl7" -to "partitioner=msg-hour&directory=/hl7&prefix=ADT_&suffix=.hl7" -s uri -t splitter
+
+    # Using Java from Command Line
+    java -jar hl7-0.1.0-SNAPSHOT-standalone.jar pliant.hl7.task.router -so "uri=file:/ADT_201310.hl7" -to "partitioner=msg-hour&directory=/hl7&prefix=ADT_&suffix=.hl7" -s uri -t splitter
 ```
 
 

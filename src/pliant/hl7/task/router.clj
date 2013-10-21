@@ -2,6 +2,7 @@
 ;; 
 ;; Author:  Daniel Rugg
 (ns pliant.hl7.task.router
+  (:gen-class)
   (:require [clojure.java.io :refer (reader resource as-url as-file file writer)]
             [clojure.tools.cli :refer (cli)]
             [pliant.hl7.codec :refer (reader->message-seq separators segment-parser message->writer)]
@@ -65,7 +66,8 @@
         partitioner (partitioners (validate-option options [:target-options :partitioner] :test identity :parse keyword))
         prefix (validate-option options [:target-options :prefix] :parse nil->empty)
         suffix (validate-option options [:target-options :suffix] :parse nil->empty)
-        directory (validate-option options [:target-options :directory] :test directory?)]
+        directory (validate-option options [:target-options :directory] :test directory?)
+        append (validate-option options [:target-options :append] :parse (fn [x] (= x "true")))]
     (fn [msg]
       (if msg
         (let [fileName (str prefix (partitioner options msg) suffix)]
@@ -74,7 +76,7 @@
             (do
               (swap! counts update-in [fileName] inc)
               (message->writer msg (@endpoints fileName)))
-            (let [writer (writer (file directory fileName))] 
+            (let [writer (writer (file directory fileName) :append append)] 
               (swap! counts assoc-in [fileName] 1)
               (swap! endpoints assoc fileName writer)
               (message->writer msg writer))))
